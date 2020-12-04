@@ -9,7 +9,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -72,4 +76,38 @@ class RestaurantTest {
         );
     }
     //<<<<<<<<<<<<<<<<<<<<<<<MENU>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    /** Placed in this class to show that calculateTotalOrderValue will be a part of the restaurants daily activity */
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>BILLING<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    @Test
+    public void calculateTotalOrderValue_when_no_item_is_passed_should_return_0 () {
+        //Arrange
+        List <String> orderItems = new ArrayList<>();
+
+        //Act
+        int orderValue = this.restaurant.calculateTotalOrderValue(orderItems);
+
+        //Assert
+        assertThat(0, is(orderValue));
+    }
+
+    @Test
+    public void calculateTotalOrderValue_when_items_passed_should_return_the_total_bill_amount() {
+        /*  restaurantMenu = [{ "Sweet corn soup", 119 }, { "Vegetable lasagne", 269 }] */
+        //Arrange
+        this.restaurant.addToMenu("Fruit Juice", 20);
+        this.restaurant.addToMenu("Waffles", 100);
+
+        List <String> orderItems = new ArrayList<>();
+        orderItems.add("Sweet corn soup");
+        orderItems.add("Waffles");
+
+        //Act
+        int orderValue = this.restaurant.calculateTotalOrderValue(orderItems);
+
+        //Assert
+        /* Price of "Sweet corn soup" + "Waffles" i.e. 119 + 100 from the mocked object */
+        assertThat(119 + 100, is(orderValue));
+    }
+    //<<<<<<<<<<<<<<<<<<<<<<<BILLING>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 }
